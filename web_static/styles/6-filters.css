@@ -1,0 +1,96 @@
+.filters {
+  height: 70px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filters button {
+  font-size: 18px;
+  background-color: #ff5a5f;
+  color: #fff;
+  height: 48px;
+  width: 20%;
+  border: none;
+  border-radius: 4px;
+  margin-right: 30px;
+}
+
+.filters button:hover {
+  opacity: 0.9;
+}
+
+.filters > div {
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.filters > div > * {
+  width: 50%;
+  margin: 2.5rem 0 2rem 2rem;
+  line-height: 2px;
+}
+
+.filters h3 {
+  font-weight: 600;
+}
+
+.filters h4 {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.locations {
+  border-right: 1px solid #ddd;
+}
+
+.locations,
+.amenities {
+  position: relative;
+	display: inline-table;
+}
+
+.locations::after,
+.amenities::after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+.papover {
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 85%;
+  right: 0%;
+  background-color: #fafafa;
+  width: 98%;
+}
+
+.papover > li {
+  margin-bottom: 13px;
+}
+
+.papover li ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.papover li ul li {
+  margin: 4px 0px 20px 0px;
+}
+
+.locations:hover > ul,
+.amenities:hover > ul {
+  display: block;
+}
+
+.amenities ul li {
+  margin: 25px;
+}
