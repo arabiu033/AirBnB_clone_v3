@@ -1,18 +1,25 @@
 #!/usr/bin/python3
 
-from models.base_model import Base, BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
+import models
 from models.amenity import Amenity
+from models.base_model import BaseModel, Base
+from models.city import City
 from models.place import Place
 from models.review import Review
+from models.state import State
+from models.user import User
+from os import getenv
+import sqlalchemy
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
 import os
+
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
+    """interaacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -35,22 +42,17 @@ class DBStorage:
         except Exception:
             raise
             print("Not Found")
-
+            
     def all(self, cls=None):
-
-        if cls is None:
-            objs = self.__session.query(State).all()
-            objs.extend(self.__session.query(User).all())
-            objs.extend(self.__session.query(Place).all())
-            objs.extend(self.__session.query(Amenity).all())
-            objs.extend(self.__session.query(City).all())
-            objs.extend(self.__session.query(Review).all())
-        else:
-            if type(cls) == str:
-                cls = eval(cls)
-            objs = self.__session.query(cls)
-        return {"{}.{}".format(type(obj).__name__, obj.id): obj
-                for obj in objs}
+        """query on the current database session"""
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         self.__session.add(obj)
@@ -71,3 +73,19 @@ class DBStorage:
     def close(self):
         """Close SQLAlchemy session."""
         self.__session.close()
+
+
+    def get(self, cls, id):
+        """returns the object based on the class and its ID,
+        or None if not found"""
+        if cls is not None and id is not None:
+            classes = self.all(cls)
+            for obj in classes.values():
+                if obj.id == id:
+                    return obj
+        else:
+            return None
+
+    def count(self, cls=None):
+        """count the number of objects in storage"""
+        return len(self.all(cls))

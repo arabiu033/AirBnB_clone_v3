@@ -81,3 +81,14 @@ class FileStorage:
     def close(self):
         """reload method."""
         self.reload()
+
+    def get(self, cls, id):
+        """ retrieve one object"""
+        self.reload()
+        key = "{}.{}".format(cls, id)
+        return (self.__objects.get(key))
+
+    def count(self, cls=None):
+        """count the number of objects in storage"""
+        self.reload()
+        return len(self.all(cls))
